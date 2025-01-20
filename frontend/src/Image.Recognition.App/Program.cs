@@ -1,7 +1,12 @@
+using Image.Recognition.App.Services;
+using Image.Recognition.App.Services.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IApiService, ApiService>();
 
 var app = builder.Build();
 

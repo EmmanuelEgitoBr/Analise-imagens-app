@@ -1,0 +1,12 @@
+﻿<h2>Upload de Imagens</h2>
+<hr/>
+<form asp-controller="Images" asp-action="SaveImage" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="imageFile">Escolha uma imagem:</label>
+        <input class="btn btn-outline-primary" type="file" id="imageFile" name="imageFile" accept="image/*" />
+    </div>
+    <hr/>
+    <div>
+        <button class="btn btn-outline-primary" type="submit">Enviar</button>
+    </div>
+</form>
