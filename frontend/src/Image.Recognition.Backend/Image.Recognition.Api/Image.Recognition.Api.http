@@ -1,0 +1,6 @@
+@Image.Recognition.Api_HostAddress = http://localhost:5095
+
+GET {{Image.Recognition.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
