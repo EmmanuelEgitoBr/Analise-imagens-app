@@ -14,15 +14,17 @@ namespace Image.Recognition.Api.Services.MongoDb
             _imageCollection = database.GetCollection<ImageModel>("Imagens");
         }
 
-        public async Task<ImageModel> GetImageAsync(string fileName)
+        public async Task<ImageModel> GetImageAsync()
         {
-            return await _imageCollection.Find(image => image.FileName == fileName).FirstOrDefaultAsync();
+            return await _imageCollection.Find(image => image.FileName!.StartsWith("imagem_base")).FirstOrDefaultAsync();
         }
 
         public async Task SaveImageAsync(IFormFile file)
         {
             if (file == null || file.Length == 0)
+            {
                 throw new ArgumentException("Arquivo inválido.");
+            }
 
             using var memoryStream = new MemoryStream();
             await file.CopyToAsync(memoryStream);

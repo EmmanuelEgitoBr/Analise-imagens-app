@@ -1,15 +1,13 @@
 ﻿using Image.Recognition.App.Models;
 using Image.Recognition.App.Services.Interfaces;
-using System.Net.Http;
-using System;
-using System.Net.Http.Headers;
 using Image.Recognition.App.Utils;
+using System.Net.Http.Headers;
 
 namespace Image.Recognition.App.Services
 {
     public class ApiService : IApiService
     {
-        public async Task SaveImage(IFormFile file, string storage)
+        public async Task SaveImageAsync(IFormFile file, string storage)
         {
             string apiUrl = $"https://localhost:7175/api/v1/images/save-{storage}"; // URL do endpoint
             string newFileName = FormatFile.SetFileName(file.FileName);
@@ -25,7 +23,7 @@ namespace Image.Recognition.App.Services
             var response = await httpClient.PostAsync(apiUrl, formData);
         }
 
-        public async Task<ImageModel> GetCompleteOrder(string storage)
+        public async Task<ImageModel> GetImageAsync(string storage)
         {
             using var httpClient = new HttpClient();
             string apiUrl = $"https://localhost:7175/api/v1/images/get-image-{storage}";

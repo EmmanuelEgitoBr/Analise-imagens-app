@@ -1,5 +1,21 @@
-﻿<h2>Comparar imagens</h2>
+﻿@model CompareImagesModel
+
+<h2>Comparar imagens</h2>
 <hr />
 <div class="container">
-    Oi
+    <div class="row">
+        <div class="col-md-4">
+            @if(!string.IsNullOrEmpty(Model.SavedImage))
+            {
+                <h5>Imagem salva:</h5>
+                <img src="data:image/png;base64, @Model.SavedImage" alt="Imagem carregada" style="max-width: 200px;" />
+            }
+            else {
+                <p>Nenhuma imagem encontrada.</p>
+            }
+        </div>
+        <div class="col-md-8">
+            <h5>Foto:</h5>
+        </div>
+    </div>
 </div>

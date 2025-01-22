@@ -1,6 +1,5 @@
 ﻿using Image.Recognition.Api.Models;
 using Image.Recognition.Api.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Image.Recognition.Api.Controllers
@@ -30,12 +29,12 @@ namespace Image.Recognition.Api.Controllers
             return Ok(file.FileName);
         }
 
-        [HttpPost("get-image-mongo/{fileName}")]
+        [HttpGet("get-image-mongo")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ImageModel>> GetImageInMongo(string fileName)
+        public async Task<ActionResult<ImageModel>> GetImageInMongo()
         {
-            var result = await _mongoService.GetImageAsync(fileName);
+            var result = await _mongoService.GetImageAsync();
 
             return result;
         }
