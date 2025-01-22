@@ -1,6 +1,8 @@
-﻿using Image.Recognition.Api.Configurations;
+﻿using Amazon.Rekognition;
+using Image.Recognition.Api.Configurations;
 using Image.Recognition.Api.Services.Interfaces;
 using Image.Recognition.Api.Services.MongoDb;
+using Image.Recognition.Api.Services.Recognition;
 using MongoDB.Driver;
 
 namespace Image.Recognition.Api
@@ -10,6 +12,7 @@ namespace Image.Recognition.Api
         public static IServiceCollection AddApiInfrastructure(this IServiceCollection services)
         {
             services.AddScoped<IMongoService, MongoService>();
+            services.AddScoped<IRecognitionService, RecognitionService>();
 
             return services;
         }
@@ -32,6 +35,18 @@ namespace Image.Recognition.Api
             services.AddScoped(provider => new MongoClient(mongoDBSettings.ConnectionString)
             .GetDatabase(mongoDBSettings.Database))
                 .AddSingleton<IMongoClient>(sp => sp.GetRequiredService<MongoClient>());
+
+            return services;
+        }
+
+        public static IServiceCollection AddAwsInfrastructure(this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            services.AddSingleton<IAmazonRekognition>(sp =>
+            {
+                var awsOptions = configuration.GetAWSOptions();
+                return awsOptions.CreateServiceClient<IAmazonRekognition>();
+            });
 
             return services;
         }

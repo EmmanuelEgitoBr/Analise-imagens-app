@@ -9,10 +9,12 @@ namespace Image.Recognition.Api.Controllers
     public class ImagesController : ControllerBase
     {
         private readonly IMongoService _mongoService;
+        private readonly IRecognitionService _recognitionService;
 
-        public ImagesController(IMongoService mongoService)
+        public ImagesController(IMongoService mongoService, IRecognitionService recognitionService)
         {
             _mongoService = mongoService;
+            _recognitionService = recognitionService;
         }
 
         [HttpPost("save-mongo")]
@@ -43,6 +45,14 @@ namespace Image.Recognition.Api.Controllers
         public IActionResult GetImageInS3Bucket(string fileName)
         {
             return Ok(fileName);
+        }
+
+        [HttpPost("analyze-image")]
+        public IActionResult AnalyseImages(byte[] photo)
+        {
+            var result = _recognitionService.AnalyseImageAsync(photo);
+
+            return Ok(result);
         }
     }
 }

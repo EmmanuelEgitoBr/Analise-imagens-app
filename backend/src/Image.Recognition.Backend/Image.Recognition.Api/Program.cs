@@ -10,6 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApiInfrastructure();
 builder.Services.AddMongoInfrastructure(builder.Configuration);
+builder.Services.AddAwsInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
