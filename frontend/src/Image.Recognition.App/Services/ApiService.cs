@@ -1,45 +1,28 @@
 ﻿using Image.Recognition.App.Models;
 using Image.Recognition.App.Services.Interfaces;
+using System.Net.Http;
+using System;
 using System.Net.Http.Headers;
 
 namespace Image.Recognition.App.Services
 {
     public class ApiService : IApiService
     {
-        public async Task<ResponseModel> SaveImage(IFormFile file)
+        public async Task<ResponseModel> SaveImage(IFormFile file, string storage)
         {
             ResponseModel responseModel = new ResponseModel();
-            string imagePath = file.FileName;
-            string apiUrl = "https://sua-api-endpoint.com/upload"; // URL do endpoint
+            
+            string apiUrl = $"https://localhost:7175/api/v1/images/save-{storage}"; // URL do endpoint
 
-            using (var client = new HttpClient())
-            using (var content = new MultipartFormDataContent())
-            {
-                // Lê o arquivo da imagem
-                var fileStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
-                var fileContent = new StreamContent(fileStream);
+            using var httpClient = new HttpClient();
+            using var formData = new MultipartFormDataContent();
 
-                // Configura o tipo do conteúdo
-                fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+            using var stream = file.OpenReadStream();
+            var streamContent = new StreamContent(stream);
+            streamContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
 
-                // Adiciona o arquivo ao corpo da requisição
-                content.Add(fileContent, "ImageFile", Path.GetFileName(imagePath));
-
-                try
-                {
-                    // Faz a requisição POST
-                    var response = await client.PostAsync(apiUrl, content);
-
-                    // Verifica se foi bem-sucedida
-                    responseModel.Message = response.IsSuccessStatusCode ? "Imagem enviada com sucesso!" : $"Erro ao enviar imagem: {response.StatusCode}";
-                    responseModel.Status = response.StatusCode;
-                }
-                catch (Exception ex)
-                {
-                    responseModel.Status = System.Net.HttpStatusCode.InternalServerError;
-                    responseModel.Message = ex.Message;
-                }
-            }
+            formData.Add(streamContent, "file", file.FileName);
+            var response = await httpClient.PostAsync(apiUrl, formData);
 
             return responseModel;
         }

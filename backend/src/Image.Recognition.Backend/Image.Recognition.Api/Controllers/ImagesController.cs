@@ -7,13 +7,13 @@ namespace Image.Recognition.Api.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
-        [HttpPost("/save-mongo")]
+        [HttpPost("save-mongo")]
         public IActionResult SaveImageInMongoDb(IFormFile file)
         {
             return Ok(file.FileName);
         }
 
-        [HttpPost("/save-bucket")]
+        [HttpPost("save-bucket")]
         public IActionResult SaveImageInS3Bucket(IFormFile file)
         {
             return Ok(file.FileName);

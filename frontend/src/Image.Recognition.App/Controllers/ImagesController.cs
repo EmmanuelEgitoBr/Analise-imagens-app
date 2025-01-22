@@ -1,4 +1,5 @@
-﻿using Image.Recognition.App.Services.Interfaces;
+﻿using Image.Recognition.App.Models.Constants;
+using Image.Recognition.App.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Image.Recognition.App.Controllers
@@ -27,7 +28,7 @@ namespace Image.Recognition.App.Controllers
                     return View();
                 }
 
-
+                await _apiService.SaveImage(imageFile, StorageMode.MongoDb);
             }
             return RedirectToAction("Index");
         }
