@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Image.Recognition.Api", "Image.Recognition.Api\Image.Recognition.Api.csproj", "{AA20CD31-FBF1-4B09-9091-CD9FDEFD4044}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Image.Recognition.Application", "Image.Recognition.Application\Image.Recognition.Application.csproj", "{679BE089-8BB5-4DBB-9404-E04084C08F09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Image.Recognition.Infra.MongoDb", "Image.Recognition.Infra.MongoDb\Image.Recognition.Infra.MongoDb.csproj", "{B77CE15B-5127-445F-85CB-F4AD8909E08F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA20CD31-FBF1-4B09-9091-CD9FDEFD4044}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA20CD31-FBF1-4B09-9091-CD9FDEFD4044}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA20CD31-FBF1-4B09-9091-CD9FDEFD4044}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA20CD31-FBF1-4B09-9091-CD9FDEFD4044}.Release|Any CPU.Build.0 = Release|Any CPU
+		{679BE089-8BB5-4DBB-9404-E04084C08F09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{679BE089-8BB5-4DBB-9404-E04084C08F09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{679BE089-8BB5-4DBB-9404-E04084C08F09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{679BE089-8BB5-4DBB-9404-E04084C08F09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B77CE15B-5127-445F-85CB-F4AD8909E08F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B77CE15B-5127-445F-85CB-F4AD8909E08F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B77CE15B-5127-445F-85CB-F4AD8909E08F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B77CE15B-5127-445F-85CB-F4AD8909E08F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
