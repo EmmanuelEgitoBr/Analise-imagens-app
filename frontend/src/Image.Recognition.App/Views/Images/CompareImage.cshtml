@@ -16,6 +16,45 @@
         </div>
         <div class="col-md-8">
             <h5>Foto:</h5>
+            <hr />
+            <video id="video" width="640" height="480" autoplay></video>
+            <canvas id="canvas" style="display:none;"></canvas>
+            <br />
+            <button id="captureBtn">Capturar Foto</button>
+            <br />
+            <img id="photo" alt="Foto Capturada" width="640" height="480" />
+
+            <form id="photoForm" enctype="multipart/form-data" method="post" action="@Url.Action("AnalysePhoto", "Images")">
+                <input type="hidden" id="photoData" name="photoData" />
+                <button type="submit">Enviar Foto</button>
+            </form>
         </div>
     </div>
 </div>
+<script>
+    // Configura a captura da câmera
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureBtn = document.getElementById('captureBtn');
+    const photo = document.getElementById('photo');
+    const photoData = document.getElementById('photoData');
+
+    // Acessa a câmera
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            video.srcObject = stream;
+        })
+        .catch(function(error) {
+            console.error('Erro ao acessar a câmera:', error);
+        });
+
+    // Captura a foto
+    captureBtn.addEventListener('click', function() {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        const imageData = canvas.toDataURL('image/png');
+        photo.src = imageData;
+        photoData.value = imageData; // Coloca os dados da imagem no campo oculto
+    });
+</script>
