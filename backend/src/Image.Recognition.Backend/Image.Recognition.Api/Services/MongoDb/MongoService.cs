@@ -26,6 +26,8 @@ namespace Image.Recognition.Api.Services.MongoDb
                 throw new ArgumentException("Arquivo inválido.");
             }
 
+            await _imageCollection.FindOneAndDeleteAsync(image => image.FileName!.StartsWith("imagem_base"));
+
             using var memoryStream = new MemoryStream();
             await file.CopyToAsync(memoryStream);
 
