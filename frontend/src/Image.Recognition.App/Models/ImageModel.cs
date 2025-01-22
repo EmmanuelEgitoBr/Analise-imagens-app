@@ -1,4 +1,4 @@
-﻿namespace Image.Recognition.Api.Models
+﻿namespace Image.Recognition.App.Models
 {
     public class ImageModel
     {

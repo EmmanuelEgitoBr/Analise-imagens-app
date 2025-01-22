@@ -4,6 +4,7 @@ namespace Image.Recognition.App.Services.Interfaces
 {
     public interface IApiService
     {
-        Task<ResponseModel> SaveImage(IFormFile file, string storage);
+        Task SaveImage(IFormFile file, string storage);
+        Task<ImageModel> GetCompleteOrder(string storage);
     }
 }

@@ -30,7 +30,7 @@ namespace Image.Recognition.Api.Controllers
             return Ok(file.FileName);
         }
 
-        [HttpPost("get-image-mongo")]
+        [HttpPost("get-image-mongo/{fileName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ImageModel>> GetImageInMongo(string fileName)
@@ -40,7 +40,7 @@ namespace Image.Recognition.Api.Controllers
             return result;
         }
 
-        [HttpGet("get-image-bucket")]
+        [HttpGet("get-image-bucket/{fileName}")]
         public IActionResult GetImageInS3Bucket(string fileName)
         {
             return Ok(fileName);
