@@ -1,4 +1,6 @@
-﻿using Amazon.Rekognition;
+﻿using Amazon.Extensions.NETCore.Setup;
+using Amazon.Rekognition;
+using Amazon.Runtime;
 using Image.Recognition.Api.Configurations;
 using Image.Recognition.Api.Services.Interfaces;
 using Image.Recognition.Api.Services.MongoDb;
@@ -42,11 +44,21 @@ namespace Image.Recognition.Api
         public static IServiceCollection AddAwsInfrastructure(this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddSingleton<IAmazonRekognition>(sp =>
-            {
-                var awsOptions = configuration.GetAWSOptions();
-                return awsOptions.CreateServiceClient<IAmazonRekognition>();
-            });
+            var awsAccessKey = configuration.GetSection("AWS:AccessKey").Value;
+            var awsSecretKey = configuration.GetSection("AWS:SecretKey").Value;
+            var awsRegion = configuration.GetSection("AWS:Region").Value;
+
+            var awsOptions = configuration.GetSection("AWS").Get<AWSOptions>();
+            //var awsOptions1 = configuration.GetAWSOptions();
+            var awsCredentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
+            var rekognitionClient = new AmazonRekognitionClient(awsCredentials, Amazon.RegionEndpoint.GetBySystemName(awsRegion));
+
+            services.AddSingleton<IAmazonRekognition>(rekognitionClient);
+
+            //services.AddSingleton<IAmazonRekognition>(sp =>
+            //{
+            //    return awsOptions!.CreateServiceClient<IAmazonRekognition>();
+            //});
 
             return services;
         }

@@ -1,5 +1,6 @@
 ﻿using Amazon.Rekognition;
 using Amazon.Rekognition.Model;
+using Image.Recognition.Api.Models;
 using Image.Recognition.Api.Services.Interfaces;
 
 namespace Image.Recognition.Api.Services.Recognition
@@ -17,24 +18,32 @@ namespace Image.Recognition.Api.Services.Recognition
 
         public async Task<string> AnalyseImageAsync(byte[] photo)
         {
-            var baseImage = _mongoService.GetImageAsync().Result.Data;
+            var baseImage = _mongoService.GetImageAsync().Result.Data!;
 
-            var comparisonResult = await CompareImagesAsync(photo, baseImage!);
+            //var image2 = Convert.FromBase64String(baseImage!);
+
+            var comparisonResult = await CompareImagesAsync(photo, baseImage);
 
             return "Oi";
         }
 
-        private async Task<CompareFacesResponse> CompareImagesAsync(byte[] image1, byte[] image2)
+        private async Task<CompareFacesResponse> CompareImagesAsync(byte[] sourceImage, byte[] targetImage)
         {
+            var requestModel = new CompareFacesRequestModel
+            {
+                SourceImageBase64 = new MemoryStream(sourceImage),
+                TargetImageBase64 = new MemoryStream(targetImage)
+            };
+
             var request = new CompareFacesRequest
             {
                 SourceImage = new Amazon.Rekognition.Model.Image
                 {
-                    Bytes = new MemoryStream(image1)
+                    Bytes = requestModel.SourceImageBase64
                 },
                 TargetImage = new Amazon.Rekognition.Model.Image
                 {
-                    Bytes = new MemoryStream(image2)
+                    Bytes = requestModel.TargetImageBase64
                 }
             };
 
