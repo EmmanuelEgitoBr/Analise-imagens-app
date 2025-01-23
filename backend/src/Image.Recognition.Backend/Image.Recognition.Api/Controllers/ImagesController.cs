@@ -56,9 +56,9 @@ namespace Image.Recognition.Api.Controllers
         }
 
         [HttpPost("analyze-bucket-image")]
-        public IActionResult AnalyseImagesFromS3Bucket(byte[] photo)
+        public IActionResult AnalyseImagesFromS3Bucket()
         {
-            var result = _recognitionService.AnalyseImageFromS3BucketAsync(photo);
+            var result = _recognitionService.AnalyseImageFromS3BucketAsync();
 
             return Ok(result);
         }

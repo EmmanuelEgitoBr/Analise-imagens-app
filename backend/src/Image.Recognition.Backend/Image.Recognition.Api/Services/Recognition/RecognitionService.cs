@@ -10,27 +10,31 @@ namespace Image.Recognition.Api.Services.Recognition
     {
         private readonly IAmazonRekognition _rekognitionClient;
         private readonly IMongoService _mongoService;
+        private readonly IS3StorageService _storageService;
 
-        public RecognitionService(IAmazonRekognition rekognitionClient, IMongoService mongoService)
+        public RecognitionService(IAmazonRekognition rekognitionClient,
+            IMongoService mongoService,
+            IS3StorageService storageService)
         {
             _rekognitionClient = rekognitionClient;
             _mongoService = mongoService;
+            _storageService = storageService;
         }
 
         public async Task<string> AnalyseImageFromMongoAsync(byte[] photo)
         {
             var baseImage = _mongoService.GetImageAsync().Result.Data!;
 
-            //var image2 = Convert.FromBase64String(baseImage!);
-
             var comparisonResult = await CompareImagesFromMongoAsync(photo, baseImage);
 
             return "Oi";
         }
 
-        public Task<string> AnalyseImageFromS3BucketAsync(byte[] photo)
+        public async Task<string> AnalyseImageFromS3BucketAsync()
         {
-            throw new NotImplementedException();
+            var comparisonResult = await CompareImagesFromS3BucketAsync();
+
+            return "Oi";
         }
 
         private async Task<CompareFacesResponse> CompareImagesFromMongoAsync(byte[] sourceImage, byte[] targetImage)
@@ -51,6 +55,21 @@ namespace Image.Recognition.Api.Services.Recognition
                 {
                     Bytes = requestModel.TargetImageBase64
                 }
+            };
+
+            return await _rekognitionClient.CompareFacesAsync(request);
+        }
+
+        private async Task<CompareFacesResponse> CompareImagesFromS3BucketAsync()
+        {
+            var sourceImage = _storageService.GetImageAsync("sourceImage.png").Result;
+            var targetImage = _storageService.GetImageAsync("targetImage.png").Result;
+
+            var request = new CompareFacesRequest
+            {
+                SourceImage = sourceImage,
+                TargetImage = targetImage,
+                SimilarityThreshold = 80F
             };
 
             return await _rekognitionClient.CompareFacesAsync(request);
