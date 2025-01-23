@@ -2,6 +2,7 @@
 using Amazon.Rekognition.Model;
 using Image.Recognition.Api.Models;
 using Image.Recognition.Api.Services.Interfaces;
+using AwsImage = Amazon.Rekognition.Model;
 
 namespace Image.Recognition.Api.Services.Recognition
 {
@@ -16,18 +17,23 @@ namespace Image.Recognition.Api.Services.Recognition
             _mongoService = mongoService;
         }
 
-        public async Task<string> AnalyseImageAsync(byte[] photo)
+        public async Task<string> AnalyseImageFromMongoAsync(byte[] photo)
         {
             var baseImage = _mongoService.GetImageAsync().Result.Data!;
 
             //var image2 = Convert.FromBase64String(baseImage!);
 
-            var comparisonResult = await CompareImagesAsync(photo, baseImage);
+            var comparisonResult = await CompareImagesFromMongoAsync(photo, baseImage);
 
             return "Oi";
         }
 
-        private async Task<CompareFacesResponse> CompareImagesAsync(byte[] sourceImage, byte[] targetImage)
+        public Task<string> AnalyseImageFromS3BucketAsync(byte[] photo)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async Task<CompareFacesResponse> CompareImagesFromMongoAsync(byte[] sourceImage, byte[] targetImage)
         {
             var requestModel = new CompareFacesRequestModel
             {
@@ -37,11 +43,11 @@ namespace Image.Recognition.Api.Services.Recognition
 
             var request = new CompareFacesRequest
             {
-                SourceImage = new Amazon.Rekognition.Model.Image
+                SourceImage = new AwsImage.Image
                 {
                     Bytes = requestModel.SourceImageBase64
                 },
-                TargetImage = new Amazon.Rekognition.Model.Image
+                TargetImage = new AwsImage.Image
                 {
                     Bytes = requestModel.TargetImageBase64
                 }

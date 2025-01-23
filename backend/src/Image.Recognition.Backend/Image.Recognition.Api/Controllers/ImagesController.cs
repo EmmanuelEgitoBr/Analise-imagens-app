@@ -47,10 +47,18 @@ namespace Image.Recognition.Api.Controllers
             return Ok(fileName);
         }
 
-        [HttpPost("analyze-image")]
-        public IActionResult AnalyseImages(byte[] photo)
+        [HttpPost("analyze-mongo-image")]
+        public IActionResult AnalyseImagesFromMongo(byte[] photo)
         {
-            var result = _recognitionService.AnalyseImageAsync(photo);
+            var result = _recognitionService.AnalyseImageFromMongoAsync(photo);
+
+            return Ok(result);
+        }
+
+        [HttpPost("analyze-bucket-image")]
+        public IActionResult AnalyseImagesFromS3Bucket(byte[] photo)
+        {
+            var result = _recognitionService.AnalyseImageFromS3BucketAsync(photo);
 
             return Ok(result);
         }

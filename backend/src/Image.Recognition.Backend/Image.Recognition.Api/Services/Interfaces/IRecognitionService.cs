@@ -2,6 +2,7 @@
 {
     public interface IRecognitionService
     {
-        Task<string> AnalyseImageAsync(byte[] photo);
+        Task<string> AnalyseImageFromMongoAsync(byte[] photo);
+        Task<string> AnalyseImageFromS3BucketAsync(byte[] photo);
     }
 }
