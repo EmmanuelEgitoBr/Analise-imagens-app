@@ -9,11 +9,15 @@ namespace Image.Recognition.Api.Controllers
     public class ImagesController : ControllerBase
     {
         private readonly IMongoService _mongoService;
+        private readonly IS3StorageService _storageService;
         private readonly IRecognitionService _recognitionService;
 
-        public ImagesController(IMongoService mongoService, IRecognitionService recognitionService)
+        public ImagesController(IMongoService mongoService,
+            IS3StorageService storageService,
+            IRecognitionService recognitionService)
         {
             _mongoService = mongoService;
+            _storageService = storageService;
             _recognitionService = recognitionService;
         }
 
@@ -26,9 +30,11 @@ namespace Image.Recognition.Api.Controllers
         }
 
         [HttpPost("save-bucket")]
-        public IActionResult SaveImageInS3Bucket(IFormFile file)
+        public async Task<IActionResult> SaveImageInS3Bucket(IFormFile file)
         {
-            return Ok(file.FileName);
+            var result = await _storageService.UploadImageAsync(file, file.FileName);
+
+            return Ok(result);
         }
 
         [HttpGet("get-image-mongo")]
@@ -42,9 +48,11 @@ namespace Image.Recognition.Api.Controllers
         }
 
         [HttpGet("get-image-bucket/{fileName}")]
-        public IActionResult GetImageInS3Bucket(string fileName)
+        public async Task<ActionResult> GetImageInS3Bucket(string fileName)
         {
-            return Ok(fileName);
+            var result = await _storageService.GetImageAsync(fileName);
+
+            return Ok(result);
         }
 
         [HttpPost("analyze-mongo-image")]
