@@ -1,3 +1,4 @@
+using Amazon.S3;
 using Image.Recognition.Api;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,5 +27,11 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGet("/list-buckets", async (IAmazonS3 s3Client) =>
+{
+    var response = await s3Client.ListBucketsAsync();
+    return response.Buckets.Select(b => b.BucketName).ToList();
+});
 
 app.Run();

@@ -52,13 +52,25 @@ namespace Image.Recognition.Api
             var awsRegion = configuration.GetSection("AWS:Region").Value;
 
             var awsOptions = configuration.GetSection("AWS").Get<AWSOptions>();
-            //var awsOptions1 = configuration.GetAWSOptions();
+            
             var awsCredentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
             var rekognitionClient = new AmazonRekognitionClient(awsCredentials, Amazon.RegionEndpoint.GetBySystemName(awsRegion));
 
             services.AddSingleton<IAmazonRekognition>(rekognitionClient);
 
             services.AddAWSService<IAmazonS3>();
+
+            services.AddSingleton<IAmazonS3>(provider =>
+            {
+                var awsAccessKey = configuration.GetSection("AWS:AccessKey").Value;
+                var awsSecretKey = configuration.GetSection("AWS:SecretKey").Value;
+                var region = configuration.GetSection("AWS:Region").Value;
+
+                var credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
+                var awsRegion = Amazon.RegionEndpoint.GetBySystemName(region);
+
+                return new AmazonS3Client(credentials, awsRegion);
+            });
 
             return services;
         }
