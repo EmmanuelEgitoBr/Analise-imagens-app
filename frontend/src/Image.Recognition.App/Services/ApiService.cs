@@ -1,17 +1,15 @@
 ﻿using Image.Recognition.App.Models;
 using Image.Recognition.App.Services.Interfaces;
-using Image.Recognition.App.Utils;
 using System.Net.Http.Headers;
 
 namespace Image.Recognition.App.Services
 {
     public class ApiService : IApiService
     {
-        public async Task SaveImageAsync(IFormFile file, string storage)
+        public async Task SaveImageAsync(IFormFile file, string fileName, string storage)
         {
-            string apiUrl = $"https://localhost:7175/api/v1/images/save-{storage}"; // URL do endpoint
-            string newFileName = FormatFile.SetFileName(file.FileName);
-
+            string apiUrl = $"https://localhost:7175/api/v1/images/save-{storage}";
+            
             using var httpClient = new HttpClient();
             using var formData = new MultipartFormDataContent();
 
@@ -19,7 +17,7 @@ namespace Image.Recognition.App.Services
             var streamContent = new StreamContent(stream);
             streamContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
 
-            formData.Add(streamContent, "file", newFileName);
+            formData.Add(streamContent, "file", fileName);
             var response = await httpClient.PostAsync(apiUrl, formData);
         }
 
@@ -31,6 +29,17 @@ namespace Image.Recognition.App.Services
             var response = await httpClient.GetAsync(apiUrl);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<ImageModel>() ?? new ImageModel();
+        }
+
+        public async Task<string> AnalyseImagesAsync(string storage)
+        {
+            string apiUrl = $"https://localhost:7175/api/v1/images/analyze-image-{storage}";
+
+            using var httpClient = new HttpClient();
+            
+            var response = await httpClient.PostAsync(apiUrl, new StringContent(""));
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<string>() ?? string.Empty;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Image.Recognition.Api.Services.MongoDb
 
         public async Task<ImageModel> GetImageAsync()
         {
-            return await _imageCollection.Find(image => image.FileName!.StartsWith("imagem_base")).FirstOrDefaultAsync();
+            return await _imageCollection.Find(image => image.FileName!.StartsWith("sourceImage")).FirstOrDefaultAsync();
         }
 
         public async Task SaveImageAsync(IFormFile file)
@@ -26,7 +26,7 @@ namespace Image.Recognition.Api.Services.MongoDb
                 throw new ArgumentException("Arquivo inválido.");
             }
 
-            await _imageCollection.FindOneAndDeleteAsync(image => image.FileName!.StartsWith("imagem_base"));
+            await _imageCollection.FindOneAndDeleteAsync(image => image.FileName == file.FileName);
 
             using var memoryStream = new MemoryStream();
             await file.CopyToAsync(memoryStream);

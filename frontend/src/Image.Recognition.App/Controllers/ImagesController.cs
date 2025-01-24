@@ -1,4 +1,5 @@
-﻿using Image.Recognition.App.Models;
+﻿using Image.Recognition.App.Helpers;
+using Image.Recognition.App.Models;
 using Image.Recognition.App.Models.Constants;
 using Image.Recognition.App.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,8 @@ namespace Image.Recognition.App.Controllers
                     return View();
                 }
 
-                await _apiService.SaveImageAsync(imageFile, StorageMode.MongoDb);
+                await _apiService.SaveImageAsync(imageFile, "sourceImage.png", StorageMode.MongoDb);
+                await _apiService.SaveImageAsync(imageFile, "sourceImage.png", StorageMode.S3Bucket);
             }
             return RedirectToAction("Index");
         }
@@ -62,14 +64,12 @@ namespace Image.Recognition.App.Controllers
             var base64Data = photoData.Substring(photoData.IndexOf(',') + 1);
             var imageBytes = Convert.FromBase64String(base64Data);
 
-            // Defina o caminho para salvar a imagem no servidor
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", Guid.NewGuid().ToString() + ".png");
+            var imageFile = FormFileHelper.ConvertToIFormFile(imageBytes);
 
-            // Salve a imagem no servidor
-            await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
+            await _apiService.SaveImageAsync(imageFile, imageFile.FileName, StorageMode.MongoDb);
+            await _apiService.SaveImageAsync(imageFile, imageFile.FileName, StorageMode.S3Bucket);
 
-            //MANDAR PARA API A SER CONSTRUÍDA NO BACK PARA CHAMAR A AWS RECOKGINITION
-            // SUGESTÃO DE ENDPOINT: https://localhost:7175/api/v1/images/analyze-image
+            var comparisonResult = await _apiService.AnalyseImagesAsync(StorageMode.S3Bucket);
 
             return Ok("Foto salva com sucesso!");
         }

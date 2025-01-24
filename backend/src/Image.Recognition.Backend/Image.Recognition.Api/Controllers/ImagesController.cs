@@ -47,7 +47,7 @@ namespace Image.Recognition.Api.Controllers
             return result;
         }
 
-        [HttpPost("analyze-mongo-image")]
+        [HttpPost("analyze-image-mongo")]
         public IActionResult AnalyseImagesFromMongo(byte[] photo)
         {
             var result = _recognitionService.AnalyseImageFromMongoAsync(photo);
@@ -55,10 +55,10 @@ namespace Image.Recognition.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost("analyze-bucket-image")]
-        public IActionResult AnalyseImagesFromS3Bucket()
+        [HttpPost("analyze-image-bucket")]
+        public async Task<ActionResult<string>> AnalyseImagesFromS3Bucket()
         {
-            var result = _recognitionService.AnalyseImageFromS3BucketAsync();
+            var result = await _recognitionService.AnalyseImageFromS3BucketAsync();
 
             return Ok(result);
         }
