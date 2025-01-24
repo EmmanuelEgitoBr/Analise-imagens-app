@@ -11,14 +11,17 @@ namespace Image.Recognition.Api.Services.Recognition
         private readonly IAmazonRekognition _rekognitionClient;
         private readonly IMongoService _mongoService;
         private readonly IS3StorageService _storageService;
+        private readonly string _bucketName;
 
         public RecognitionService(IAmazonRekognition rekognitionClient,
             IMongoService mongoService,
-            IS3StorageService storageService)
+            IS3StorageService storageService,
+            IConfiguration configuration)
         {
             _rekognitionClient = rekognitionClient;
             _mongoService = mongoService;
             _storageService = storageService;
+            _bucketName = configuration["AWS:BucketName"]!;
         }
 
         public async Task<string> AnalyseImageFromMongoAsync(byte[] photo)
@@ -62,8 +65,8 @@ namespace Image.Recognition.Api.Services.Recognition
 
         private async Task<CompareFacesResponse> CompareImagesFromS3BucketAsync()
         {
-            var sourceImage = _storageService.GetImageAsync("sourceImage.png").Result;
-            var targetImage = _storageService.GetImageAsync("targetImage.png").Result;
+            var sourceImage = GetImage("sourceImage.png");
+            var targetImage = GetImage("targetImage.png");
 
             var request = new CompareFacesRequest
             {
@@ -73,6 +76,22 @@ namespace Image.Recognition.Api.Services.Recognition
             };
 
             return await _rekognitionClient.CompareFacesAsync(request);
+        }
+
+        private Amazon.Rekognition.Model.Image GetImage(string fileName)
+        {
+            AwsImage.S3Object s3Object = new AwsImage.S3Object
+            {
+                Bucket = _bucketName,
+                Name = fileName
+            };
+
+            var image = new AwsImage.Image
+            {
+                S3Object = s3Object
+            };
+
+            return image;
         }
     }
 }

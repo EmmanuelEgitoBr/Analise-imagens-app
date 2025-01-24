@@ -30,32 +30,6 @@ namespace Image.Recognition.Api.Services.S3Storage
             return $"Arquivo {fileName} deletado com sucesso";
         }
 
-        public async Task<Amazon.Rekognition.Model.Image> GetImageAsync(string fileName)
-        {
-            var request = new GetObjectRequest
-            {
-                BucketName = _bucketName,
-                Key = fileName
-            };
-
-            using var response = await _s3Client.GetObjectAsync(request);
-            using var memoryStream = new MemoryStream();
-            await response.ResponseStream.CopyToAsync(memoryStream);
-
-            AwsImage.S3Object s3Object = new AwsImage.S3Object
-            {
-                Bucket = _bucketName,
-                Name = fileName
-            };
-
-            var image = new AwsImage.Image
-            {
-                S3Object = s3Object
-            };
-
-            return image;
-        }
-
         public async Task<string> ReplaceImageAsync(IFormFile file, string fileName)
         {
             await DeleteImageAsync(fileName);

@@ -1,6 +1,7 @@
 ﻿using Amazon.Extensions.NETCore.Setup;
 using Amazon.Rekognition;
 using Amazon.Runtime;
+using Amazon.S3;
 using Image.Recognition.Api.Configurations;
 using Image.Recognition.Api.Services.Interfaces;
 using Image.Recognition.Api.Services.MongoDb;
@@ -57,7 +58,7 @@ namespace Image.Recognition.Api
 
             services.AddSingleton<IAmazonRekognition>(rekognitionClient);
 
-
+            services.AddAWSService<IAmazonS3>();
 
             return services;
         }

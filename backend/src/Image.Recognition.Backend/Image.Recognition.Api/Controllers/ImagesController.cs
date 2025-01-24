@@ -47,14 +47,6 @@ namespace Image.Recognition.Api.Controllers
             return result;
         }
 
-        [HttpGet("get-image-bucket/{fileName}")]
-        public async Task<ActionResult> GetImageInS3Bucket(string fileName)
-        {
-            var result = await _storageService.GetImageAsync(fileName);
-
-            return Ok(result);
-        }
-
         [HttpPost("analyze-mongo-image")]
         public IActionResult AnalyseImagesFromMongo(byte[] photo)
         {
